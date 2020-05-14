@@ -1,4 +1,4 @@
-# Proyecto final AI Dev 2020
+# Proyecto AI Dev Senpai 2020
 
 ### Conformación del equipo
 ---
@@ -11,6 +11,12 @@
 *TODO*
 
 ### Descripción de la solución inicial planteada
+---
+
+*TODO*
+
+### Descripción inicial del algoritmo de machine learning o modelo de deep learning a
+utilizar
 ---
 
 *TODO*
