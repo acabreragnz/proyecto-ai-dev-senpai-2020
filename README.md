@@ -1,2 +1,21 @@
-# proyecto-ai-dev-2020
-En este repositorio se encuentra el trabajo realizado para el proyecto final del curso "Artificial Intelligence Developer 1 2020 UY"
+# Proyecto final AI Dev 2020
+
+### Conformación del equipo
+---
+- Anthony Cabrera
+- Gonzalo Gutierrez
+
+### Descripción de la problemática a solucionar
+---
+
+*TODO*
+
+### Descripción de la solución inicial planteada
+---
+
+*TODO*
+
+### Análisis de soluciones existentes y detalle de la alternativa seleccionada
+---
+
+*TODO*
