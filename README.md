@@ -15,8 +15,7 @@
 
 *TODO*
 
-### Descripción inicial del algoritmo de machine learning o modelo de deep learning a
-utilizar
+### Descripción inicial del algoritmo de machine learning o modelo de deep learning a utilizar
 ---
 
 *TODO*
