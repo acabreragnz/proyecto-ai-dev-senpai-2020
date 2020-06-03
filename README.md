@@ -3,7 +3,7 @@
 ### Conformación del equipo
 ---
 - Anthony Cabrera
-- Gonzalo Gutierrez
+- Gonzalo Gutiérrez
 
 ### Descripción de la problemática a solucionar
 ---
