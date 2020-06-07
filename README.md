@@ -23,8 +23,185 @@ Es importante resaltar que se hace un procesado de las imágenes ya que las mism
 
 ### Descripción inicial del algoritmo de machine learning o modelo de deep learning a utilizar
 ---
+Cómo se mencionó anteriormente la solución planteada consiste en una red DCGAN la cual pasaremos a detallar a continuación:
 
-*TODO*
+#### Red Generador:
+---
+
+Se comienza con un vector de ruido (z) que será el punto de entrada a las capas iniciales que generan imágenes de baja resolución. Progresivamente se aumenta la resolución con capas posteriores hasta llegar a tener a la salida una resolución cuyo *output* G(z) tiene la misma dimensión que los elementos post-procesados del *dataset* (32x32x3).
+
+* **Entrada**: Vector de ruido (z) de largo 100.
+* **Salida**:  Imágenes con tres canales de colores y de tamaño 32 por 32 píxeles.
+
+A partir de lo visto en diversa literatura [5],[6],[7], típicamente la arquitectura para un generador en una DCGAN se compone de lo siguiente:
+
+* Seteo de hiper parámetros para el vector de ruido 
+
+```python
+noise_dim = 100
+```
+* Se define la base para la generación de una imágen de 4x4 y 256 nodos como para poder generar múltiples versiones de la imágen de salida.
+
+```python
+generator = Sequential()
+n_nodes = 4 * 4 * 256 
+generator.add(Dense(n_nodes, input_dim=noise_dim))
+generator.add(LeakyReLU(0.2))
+generator.add(Reshape((4, 4, 256)))
+```
+
+* *Upsample* a 8x8. Se aplica la capa *Conv2DTranspose*, con un *stride*=(2,2) cuadruplicando el tamaño de la imágen, y un *kernel_size*=(4,4) múltiplo del *stride*.
+
+```python
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(BatchNormalization())
+generator.add(LeakyReLU(0.2))
+```
+* *Upsample* a 16x16
+
+```python
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(BatchNormalization())
+generator.add(LeakyReLU(0.2))
+```
+* *Upsample* a 32x32
+
+```python
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(BatchNormalization())
+generator.add(LeakyReLU(0.2))
+```
+* El *upsample* se ha realizado, ahora se procede a agregar una capa *Conv2DTranspose*, para los 3 canales a color, dando a la salida una imagen de 32x32, normalizados para la entrada al modelo del discriminador a partir de la función de activación *tanh*.
+
+```python
+generator.add(Conv2D(3, (3, 3), activation=’tanh’, padding=’same’))
+```
+
+Finalmente, el código para el modelo del generador, queda de la siguiente manera:
+
+```python
+noise_dim = 100
+generator = Sequential()
+n_nodes = 4 * 4 * 256 
+generator.add(Dense(n_nodes, input_dim=noise_dim))
+generator.add(LeakyReLU(0.2))
+generator.add(Reshape((4, 4, 256)))
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(BatchNormalization())
+generator.add(LeakyReLU(0.2))
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(BatchNormalization())
+generator.add(LeakyReLU(0.2))
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(BatchNormalization())
+generator.add(LeakyReLU(0.2))
+generator.add(Conv2D(3, (3, 3), activation=’tanh’, padding=’same’))
+```
+
+![Arquitectura Generador](assets/arquitectura-generador.png?raw=true "Fig. 1: Ejemplo de arquitectura del Generador para una DCGAN.")
+
+**Fig. 1:** Ejemplo de arquitectura del Generador para una DCGAN.
+
+A partir de fuentes consultadas, se observan recomendaciones a tener en cuenta para la red generador:
+
+* Eliminar capas *Fully Connected* [3].
+* Utilizar *batch normalization* en todas las capas excepto la capa de salida [3].
+* En las capas de *Conv2DTranpose* para el upsampling, utilizar *kernels* con tamaño múltiplo del tamaño del stride en el generador, esto para solucionar el problema de *checkerboard artifacts* que sucede al generar imágenes [8].
+
+
+#### Red Discriminador:
+--- 
+
+La red discriminador consiste en un clasificador CNN, con ciertas modificaciones mencionadas a continuación para un mejor desempeño del mismo dentro de la GAN.
+
+* **Entrada**: Imágenes con tres canales de colores y de tamaño 32 por 32 píxeles.
+* **Salida**: Clasificación binaria, se utiliza 1 nodo cuya activación es la probabilidad de que la imagen sea real o falsa.
+
+![Arquitectura Discriminador](assets/arquitectura-discriminator.png?raw=true "Fig. 2: Ejemplo de arquitectura del Discriminador para una DCGAN.")
+
+**Fig. 2:** Ejemplo de arquitectura del Discriminador para una DCGAN.
+
+A continuación se presenta una versión inicial del modelo discriminador:
+
+```python
+discriminator = Sequential()
+discriminator.add(Conv2D(64, (3, 3), padding=’same’, input_shape=(32, 32, 3)))
+discriminator.add(BatchNormalization())
+discriminator.add(LeakyReLU(0.2))
+```
+* Se hace un *downsample* a 16 x 16, y se duplican la cantidad de filtros
+
+```python
+discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding=’same’))
+discriminator.add(BatchNormalization())
+discriminator.add(LeakyReLU(0.2))
+```
+* Se hace un *downsample* a 8 x 8
+
+```python
+discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding=’same’))
+discriminator.add(BatchNormalization())
+discriminator.add(LeakyReLU(0.2))
+```
+
+* Se hace un *downsample* a 16 x 16, y se duplican la cantidad de filtros
+
+```python
+discriminator.add(Conv2D(256, (4,4), strides=(2, 2), padding=’same’))
+discriminator.add(BatchNormalization())
+discriminator.add(LeakyReLU(0.2))
+```
+
+* Se define un clasificador 
+
+```python
+discriminator.add(Flatten())
+discriminator.add(Dropout(0.4))
+discriminator.add(Dense(1, activation=’sigmoid’))
+```
+
+* Finalmente se compila
+discriminator.compile(loss=’binary_crossentropy’, optimizer=Adam(lr=0.0002, beta_1=0.5)) 
+
+Se usa como optimizador *Adam*, con *learning rate* = 0.2x10-3 y *momentum* = 0.5.
+Como función de pérdida se utiliza *binary_crossentropy*, tras tratarse de un problema de clasificación binaria.
+
+Juntando las partes anteriores, el discriminador queda definido de la siguiente manera:
+
+```python
+discriminator = Sequential()
+discriminator.add(Conv2D(64, (3, 3), padding='same', input_shape=(32, 32, 3)))
+
+discriminator.add(BatchNormalization())
+discriminator.add(LeakyReLU(leaky_relu_alpha))
+
+discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding='same'))
+discriminator.add(BatchNormalization())
+discriminator.add(LeakyReLU(leaky_relu_alpha))
+
+discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding='same'))
+discriminator.add(BatchNormalization())
+discriminator.add(LeakyReLU(leaky_relu_alpha))
+
+discriminator.add(Conv2D(256, (4,4), strides=(2, 2), padding='same'))
+discriminator.add(BatchNormalization())
+discriminator.add(LeakyReLU(leaky_relu_alpha))
+
+discriminator.add(Flatten())
+discriminator.add(Dropout(0.4))
+discriminator.add(Dense(1, activation='sigmoid'))
+
+discriminator.summary()
+```
+
+Se observaron las siguientes recomendaciones a tener en cuenta para la red discriminador:
+
+* Reemplazar todas las capas de *pooling* por capas convolucionales con *stride* [5].
+* Usar *batch normalization* en todas las capas ocultas, antes de la activación *LeakyReLU* [5]. Esto acarrea ciertos problemas [9] que se solucionan entrenando el discriminador separadamente en imágenes reales por un lado, y falsas por otro.
+* Usar la activación *LeakyReLU* para todas las capas (a excepción de la salida) con el valor recomendado 0,2 [5].
+* En las capas de *Conv2D* utilizar *kernels* con tamaño múltiplo del tamaño del *stride* en el discriminador, esto para solucionar el problema de *checkerboard artifacts* que sucede al generar imágenes [8].
+* Utilizar una capa de *Dropout* en el clasificador [8].
+
 
 ### Análisis de soluciones existentes y detalle de la alternativa seleccionada
 ---
