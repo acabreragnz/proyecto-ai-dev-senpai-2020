@@ -32,9 +32,13 @@ Es importante resaltar que se hace un procesado de las imágenes ya que las mism
 *TODO*
 
 ### Referencias y Bibliografía
---- 
+---
 [1] Goodfellow, Ian, et al. "Generative adversarial nets." Advances in neural information processing systems. 2014.<br />
 [2] https://palletsprojects.com/p/flask/<br />
 [3] Radford, Alec, Luke Metz, and Soumith Chintala. "Unsupervised representation learning with deep convolutional generative adversarial networks." arXiv preprint arXiv:1511.06434 (2015).<br />
 [4]  Linjie Yang, Ping Luo, Chen Change Loy, Xiaoou Tang. A Large-Scale Car Dataset for Fine-Grained Categorization and Verification, In Computer Vision and Pattern Recognition (CVPR), 2015.<br />
 [5] Brownlee, Jason. Generative Adversarial Networks with Python: Deep Learning Generative Models for Image Synthesis and Image Translation. Machine Learning Mastery, 2019.<br />
+[6] https://medium.com/analytics-vidhya/implementing-a-gan-in-keras-d6c36bc6ab5f <br />
+[7] https://towardsdatascience.com/gan-by-example-using-keras-on-tensorflow-backend-1a6d515a60d0 <br />
+[6] https://datascience.stackexchange.com/questions/56860/dc-gan-with-batch-normalization-not-working <br />
+[7] François, Chollet. "Deep learning with Python." (2017).
