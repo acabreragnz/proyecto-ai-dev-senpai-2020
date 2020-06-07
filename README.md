@@ -53,28 +53,28 @@ generator.add(Reshape((4, 4, 256)))
 * *Upsample* a 8x8. Se aplica la capa *Conv2DTranspose*, con un *stride*=(2,2) cuadruplicando el tamaño de la imágen, y un *kernel_size*=(4,4) múltiplo del *stride*.
 
 ```python
-generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding='same'))
 generator.add(BatchNormalization())
 generator.add(LeakyReLU(0.2))
 ```
 * *Upsample* a 16x16
 
 ```python
-generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding='same'))
 generator.add(BatchNormalization())
 generator.add(LeakyReLU(0.2))
 ```
 * *Upsample* a 32x32
 
 ```python
-generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding='same'))
 generator.add(BatchNormalization())
 generator.add(LeakyReLU(0.2))
 ```
 * El *upsample* se ha realizado, ahora se procede a agregar una capa *Conv2DTranspose*, para los 3 canales a color, dando a la salida una imagen de 32x32, normalizados para la entrada al modelo del discriminador a partir de la función de activación *tanh*.
 
 ```python
-generator.add(Conv2D(3, (3, 3), activation=’tanh’, padding=’same’))
+generator.add(Conv2D(3, (3, 3), activation='tanh', padding='same'))
 ```
 
 Finalmente, el código para el modelo del generador, queda de la siguiente manera:
@@ -86,16 +86,16 @@ n_nodes = 4 * 4 * 256
 generator.add(Dense(n_nodes, input_dim=noise_dim))
 generator.add(LeakyReLU(0.2))
 generator.add(Reshape((4, 4, 256)))
-generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding='same'))
 generator.add(BatchNormalization())
 generator.add(LeakyReLU(0.2))
-generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding='same'))
 generator.add(BatchNormalization())
 generator.add(LeakyReLU(0.2))
-generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding=’same’))
+generator.add(Conv2DTranspose(128, (4,4), strides = (2,2), padding='same'))
 generator.add(BatchNormalization())
 generator.add(LeakyReLU(0.2))
-generator.add(Conv2D(3, (3, 3), activation=’tanh’, padding=’same’))
+generator.add(Conv2D(3, (3, 3), activation='tanh', padding='same'))
 ```
 
 ![Arquitectura Generador](assets/arquitectura-generador.png?raw=true "Fig. 1: Ejemplo de arquitectura del Generador para una DCGAN.")
@@ -125,21 +125,21 @@ A continuación se presenta una versión inicial del modelo discriminador:
 
 ```python
 discriminator = Sequential()
-discriminator.add(Conv2D(64, (3, 3), padding=’same’, input_shape=(32, 32, 3)))
+discriminator.add(Conv2D(64, (3, 3), padding='same', input_shape=(32, 32, 3)))
 discriminator.add(BatchNormalization())
 discriminator.add(LeakyReLU(0.2))
 ```
 * Se hace un *downsample* a 16 x 16, y se duplican la cantidad de filtros
 
 ```python
-discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding=’same’))
+discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding='same'))
 discriminator.add(BatchNormalization())
 discriminator.add(LeakyReLU(0.2))
 ```
 * Se hace un *downsample* a 8 x 8
 
 ```python
-discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding=’same’))
+discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding='same'))
 discriminator.add(BatchNormalization())
 discriminator.add(LeakyReLU(0.2))
 ```
@@ -147,7 +147,7 @@ discriminator.add(LeakyReLU(0.2))
 * Se hace un *downsample* a 16 x 16, y se duplican la cantidad de filtros
 
 ```python
-discriminator.add(Conv2D(256, (4,4), strides=(2, 2), padding=’same’))
+discriminator.add(Conv2D(256, (4,4), strides=(2, 2), padding='same'))
 discriminator.add(BatchNormalization())
 discriminator.add(LeakyReLU(0.2))
 ```
@@ -157,11 +157,14 @@ discriminator.add(LeakyReLU(0.2))
 ```python
 discriminator.add(Flatten())
 discriminator.add(Dropout(0.4))
-discriminator.add(Dense(1, activation=’sigmoid’))
+discriminator.add(Dense(1, activation='sigmoid'))
 ```
 
 * Finalmente se compila
-discriminator.compile(loss=’binary_crossentropy’, optimizer=Adam(lr=0.0002, beta_1=0.5)) 
+
+```python
+discriminator.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
+```
 
 Se usa como optimizador *Adam*, con *learning rate* = 0.2x10-3 y *momentum* = 0.5.
 Como función de pérdida se utiliza *binary_crossentropy*, tras tratarse de un problema de clasificación binaria.
@@ -191,7 +194,7 @@ discriminator.add(Flatten())
 discriminator.add(Dropout(0.4))
 discriminator.add(Dense(1, activation='sigmoid'))
 
-discriminator.summary()
+discriminator.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
 ```
 
 Se observaron las siguientes recomendaciones a tener en cuenta para la red discriminador:
