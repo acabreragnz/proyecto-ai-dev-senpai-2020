@@ -176,19 +176,19 @@ discriminator = Sequential()
 discriminator.add(Conv2D(64, (3, 3), padding='same', input_shape=(32, 32, 3)))
 
 discriminator.add(BatchNormalization())
-discriminator.add(LeakyReLU(leaky_relu_alpha))
+discriminator.add(LeakyReLU(0.2))
 
 discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding='same'))
 discriminator.add(BatchNormalization())
-discriminator.add(LeakyReLU(leaky_relu_alpha))
+discriminator.add(LeakyReLU(0.2))
 
 discriminator.add(Conv2D(128, (4, 4), strides=(2, 2), padding='same'))
 discriminator.add(BatchNormalization())
-discriminator.add(LeakyReLU(leaky_relu_alpha))
+discriminator.add(LeakyReLU(0.2))
 
 discriminator.add(Conv2D(256, (4,4), strides=(2, 2), padding='same'))
 discriminator.add(BatchNormalization())
-discriminator.add(LeakyReLU(leaky_relu_alpha))
+discriminator.add(LeakyReLU(0.2))
 
 discriminator.add(Flatten())
 discriminator.add(Dropout(0.4))
