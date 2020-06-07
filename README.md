@@ -29,7 +29,13 @@ Es importante resaltar que se hace un procesado de las imágenes ya que las mism
 ### Análisis de soluciones existentes y detalle de la alternativa seleccionada
 ---
 
-*TODO*
+Se encontró una publicación de Jason Brownlee, titulada *How to Develop a DCGAN for Small Color Photographs*, en la misma desarrollan la solución al problema de generar imágenes a color de pequeña resolución utilizando una DCGAN, la red es entrenada utilizando el dataset CIFAR-10. En el marco de este proyecto se realizan cambios en la arquitectura como el uso de batch normalization, el entrenamiento del discriminador sin mezclar imágenes falsas con verdaderas, y además para la entrega final se considera aplicar suavizado de las etiquetas, como también el uso de kernels de tamaño múltiplo del tamaño de los strides, etc. <br />
+https://machinelearningmastery.com/how-to-develop-a-generative-adversarial-network-for-a-cifar-10-small-object-photographs-from-scratch/
+
+También se encontró un repositorio de GitHub, donde se aborda una problemática similar. En este caso hacen un *scraping* a partir de dos dos sitios web de venta de autos (Carvana & Carmax). El link a su repositorio es el siguiente: <br /> https://github.com/asoomar/car-design-generation
+
+En cuanto a datasets, existe un dataset conteniendo 16.000 imágenes de autos, llamado *"Cars Dataset" el cual se encuentra disponible en la siguiente dirección: <br />
+https://ai.stanford.edu/~jkrause/cars/car_dataset.html
 
 ### Referencias y Bibliografía
 ---
